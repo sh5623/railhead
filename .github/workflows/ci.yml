@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest        # Ubuntu: Playwright `--with-deps`가 apt로 브라우저 라이브러리 설치
+    env:
+      CI: "true"                  # Playwright: forbidOnly, retries, no server reuse, preview target
+      VITE_API_BASE_URL: http://localhost:8080   # env.ts가 시작 시 Zod로 검증 → build/E2E에 필요
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enable pnpm (corepack)
+        run: corepack enable        # package.json `packageManager`에 고정된 pnpm 버전 사용
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24          # package.json engines ">=24.0.0"와 일치
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium   # 두 PW 프로젝트 모두 Chromium 엔진
+      - run: pnpm typecheck         # tsc --noEmit (strict)
+      - run: pnpm exec biome ci .   # lint + format 검사 (no write)
+      - run: pnpm test:run          # Vitest unit/component (1회)
+      - run: pnpm build             # tsc -b && vite build -> dist/
+      - run: pnpm e2e               # Playwright; CI=true는 vite preview(dist) 대상

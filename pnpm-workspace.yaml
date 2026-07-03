@@ -1,0 +1,15 @@
+minimumReleaseAgeExclude:
+  - '@vitest/expect@4.1.9'
+  - '@vitest/mocker@4.1.9'
+  - '@vitest/pretty-format@4.1.9'
+  - '@vitest/runner@4.1.9'
+  - '@vitest/snapshot@4.1.9'
+  - '@vitest/spy@4.1.9'
+  - '@vitest/utils@4.1.9'
+  - vitest@4.1.9
+# pnpm 11 reads project settings from here (no longer the package.json "pnpm" field).
+# Suppress the openapi-typescript peer warning: it declares typescript ^5.x but
+# works fine on TS 6 (build-time CLI that only emits .ts type files).
+peerDependencyRules:
+  allowedVersions:
+    "openapi-typescript>typescript": "6"

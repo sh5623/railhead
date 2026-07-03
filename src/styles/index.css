@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+/*
+ * Design system — neutral, professional, restrained (see DESIGN.md).
+ * Two layers: raw OKLCH tokens in :root/.dark, then @theme inline maps them
+ * to Tailwind utilities (bg-background, text-muted-foreground, …).
+ * Class-based dark mode. (Add `@import "tw-animate-css";` when you pull in
+ * animated shadcn components.)
+ */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --radius: 0.625rem;
+
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.52 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --success: oklch(0.59 0.13 160);
+  --success-foreground: oklch(0.985 0 0);
+  --warning: oklch(0.55 0.12 72);
+  --warning-foreground: oklch(0.985 0 0);
+  --brand: oklch(0.56 0.14 245);
+  --brand-foreground: oklch(0.985 0 0);
+  /* Theme-toggle knob — azure "sun" disc in light mode. The "bite" that carves
+     the crescent matches the track here (sun stays a clean disc at rest). */
+  --toggle-knob: var(--brand);
+  --toggle-knob-shadow: var(--muted);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.205 0 0);
+  --success: oklch(0.7 0.14 160);
+  --success-foreground: oklch(0.205 0 0);
+  --warning: oklch(0.8 0.13 80);
+  --warning-foreground: oklch(0.205 0 0);
+  --brand: oklch(0.7 0.12 245);
+  --brand-foreground: oklch(0.205 0 0);
+  /* Theme-toggle knob — pale azure "moon" in dark mode, distinct from the track.
+     The bite is a deeper azure (the moon's shadowed side), NOT the gray track, so
+     the moon reads as a full sphere — lit crescent + shadowed body — off the track. */
+  --toggle-knob: oklch(0.86 0.06 245);
+  --toggle-knob-shadow: oklch(0.48 0.07 245);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  /* Mid tone for the hero title ramp: ink → ink/brand mix → brand. Theme-aware
+     (resolves --foreground/--brand per light/dark at use site). */
+  --color-brand-ink: color-mix(in srgb, var(--foreground), var(--brand) 60%);
+  --color-toggle-knob: var(--toggle-knob);
+  --color-toggle-knob-shadow: var(--toggle-knob-shadow);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+/*
+ * Elevation — restrained, low-opacity stacked shadows (see DESIGN.md "Depth & Elevation").
+ * Tunes Tailwind's shadow-xs/sm/md/lg so the elevation ladder stays soft, never heavy.
+ * Dark mode leans on surface lift, not shadow.
+ */
+@theme {
+  --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 0.04);
+  --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 0.05), 0 1px 3px 0 oklch(0 0 0 / 0.05);
+  --shadow-md: 0 2px 4px -1px oklch(0 0 0 / 0.06), 0 4px 8px -2px oklch(0 0 0 / 0.06);
+  --shadow-lg: 0 4px 8px -2px oklch(0 0 0 / 0.07), 0 12px 20px -4px oklch(0 0 0 / 0.08);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    /* Korean-first wrapping: break at 어절 (spaces), never mid-word.
+       overflow-wrap lets truly unbreakable strings (long URLs/IDs) still break. */
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+}
